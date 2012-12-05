@@ -6,6 +6,7 @@ use Aysheka\Password\Type\Low;
 use Aysheka\Password\Type\Medium;
 use Aysheka\Password\Type\Strong;
 use Aysheka\Password\Type\Generator;
+use Aysheka\Password\Exception\InvalidLengthException;
 
 class PasswordGenerator
 {
@@ -54,10 +55,15 @@ class PasswordGenerator
     /**
      * Generate password
      * @param int $length
+     * @throws Exception\InvalidLengthException
      * @return string
      */
     function generate($length = 8)
     {
+        if ($length < 5) {
+            throw new InvalidLengthException($length);
+        }
+
         return $this->generatorType->generate($length);
     }
 
