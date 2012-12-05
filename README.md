@@ -1,7 +1,7 @@
-This lib help to generate password
+This library helps to generate a password
 =====================
 
-This is the Simple lib for generating password
+This is a simple library for generating passwords
 
-1. Allow generate password with 3 type strong (low, medium, strong)
-2. Allow select password length
+1. You can set the difficulty of the generated password
+2. Allows you to choose the length of the password
