@@ -1,0 +1,17 @@
+{
+    "name": "aysheka/password",
+    "description": "Password generator",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "aysheka",
+            "email": "alimovalisher@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Aysheka\\Password": "src/",
+            "Aysheka\\Password\\Test": "test/"
+        }
+    }
+}
