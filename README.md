@@ -11,7 +11,7 @@ This is a simple library for generating passwords
 Example
 -------
 
-Initializing
+How initialize password generator?
 -------
 At first we must register available generators
 ~~~~~ php
@@ -21,7 +21,7 @@ PasswordGenerator::get()
                         ->registerGenerator(new Strong());
 ~~~~~
 
-Password generating
+How to generate password?
 ------
 
 ~~~~~ php
