@@ -8,15 +8,23 @@ class Low extends Generator
      */
     function getDictionary()
     {
-        return $this->numbers;
+        return '23456789';
     }
 
     protected function check($password)
     {
-        $intersect = array_intersect(str_split(self::getDictionary()), str_split($password));
+        $pattern = sprintf('/[%s]/', $this->getDictionary());
 
-        return !empty($intersect);
+        return preg_match($pattern, $password);
     }
 
+    /**
+     * Return min required length for password
+     * @return int
+     */
+    protected function getMinLength()
+    {
+        return 1;
+    }
 
 }

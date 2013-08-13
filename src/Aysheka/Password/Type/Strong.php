@@ -3,9 +3,11 @@ namespace Aysheka\Password\Type;
 
 class Strong extends Medium
 {
+    private $specialChars = '!@#$%^&&*()-_+=:;';
+
     function getDictionary()
     {
-        return parent::getDictionary() . $this->specialChars;
+        return parent::getDictionary() . $this->getSpecialChars();
     }
 
     protected function check($password)
@@ -14,10 +16,16 @@ class Strong extends Medium
             return false;
         }
 
-        $intersect = array_intersect(str_split($this->specialChars), str_split($password));
+        $pattern = sprintf('/[%s]/', $this->getSpecialChars());
 
-        return !empty($intersect);
+        return preg_match($pattern, $password);
     }
 
-
+    /**
+     * @return string
+     */
+    protected function getSpecialChars()
+    {
+        return $this->specialChars;
+    }
 }

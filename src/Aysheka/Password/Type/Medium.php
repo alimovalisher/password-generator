@@ -3,6 +3,8 @@ namespace Aysheka\Password\Type;
 
 class Medium extends Low
 {
+    protected $chars = 'qwertyupasdfghjkzxcvbnm';
+
     function getDictionary()
     {
         return parent::getDictionary() . $this->chars . strtoupper($this->chars);
@@ -16,6 +18,5 @@ class Medium extends Low
 
         return preg_match('/[a-z]/', $password) && preg_match('/[A-Z]/', $password);
     }
-
 
 }

@@ -2,23 +2,31 @@
 
 namespace Aysheka\Password;
 
-use Aysheka\Password\Type\Low;
-use Aysheka\Password\Type\Medium;
-use Aysheka\Password\Type\Strong;
+use Aysheka\Password\Exception\GeneratorNotFound;
 use Aysheka\Password\Type\Generator;
 use Aysheka\Password\Exception\InvalidLengthException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class PasswordGenerator
 {
     /**
      * @var Generator
      */
-    private $generatorType;
+    private $currentGenerator;
 
-    private function __construct()
+    /**
+     * @var ArrayCollection
+     */
+    private $generators;
+
+    /**
+     * @var PasswordGenerator
+     */
+    private static $instance;
+
+    private final function __construct()
     {
-        // set default generator
-        $this->generatorType = new Medium();
+        $this->generators = new ArrayCollection();
     }
 
     /**
@@ -27,27 +35,45 @@ class PasswordGenerator
      */
     static function get()
     {
-        return new self();
+        if (null == static::$instance) {
+            $class            = get_called_class();
+            static::$instance = new $class;
+        }
+
+        return static::$instance;
+    }
+
+    /**
+     * Switch generator
+     * @param $name
+     * @return mixed
+     * @throws Exception\GeneratorNotFound
+     */
+    function switchGenerator($name)
+    {
+        $occurredGenerators = $this->getGenerators()->filter(function (Generator $generator) use ($name) {
+            return $generator->getName() == $name;
+        });
+
+        if ($occurredGenerators->isEmpty()) {
+            throw new GeneratorNotFound($name);
+        }
+
+        $this->currentGenerator = $occurredGenerators->first();
+
+        return $this->currentGenerator;
     }
 
 
-    function medium()
+    /**
+     * @param Generator $generator
+     * @return $this
+     */
+    function registerGenerator(Generator $generator)
     {
-        $this->generatorType = new Medium();
-
-        return $this;
-    }
-
-    function low()
-    {
-        $this->generatorType = new Low();
-
-        return $this;
-    }
-
-    function strong()
-    {
-        $this->generatorType = new Strong();
+        if (!$this->getGenerators()->contains($generator)) {
+            $this->getGenerators()->add($generator);
+        }
 
         return $this;
     }
@@ -60,11 +86,23 @@ class PasswordGenerator
      */
     function generate($length = 8)
     {
-        if ($length < 5) {
-            throw new InvalidLengthException($length);
-        }
+        return $this->getCurrentGenerator()->generate($length);
+    }
 
-        return $this->generatorType->generate($length);
+    /**
+     * @return ArrayCollection
+     */
+    function getGenerators()
+    {
+        return $this->generators;
+    }
+
+    /**
+     * @return Generator
+     */
+    function getCurrentGenerator()
+    {
+        return $this->currentGenerator;
     }
 
 }

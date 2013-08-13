@@ -2,22 +2,26 @@
 
 namespace Aysheka\Password\Type;
 
+use Aysheka\Password\Exception\InvalidLengthException;
+
 /**
  * Base password generator
  */
 abstract class Generator
 {
-    protected $numbers = '23456789';
-    protected $chars = 'qwertyupasdfghjkzxcvbnm';
-    protected $specialChars = '!@#$%^&&*()-_+=:;';
 
     /**
      * generate password
      * @param $length
+     * @throws \Aysheka\Password\Exception\InvalidLengthException
      * @return string
      */
     function generate($length)
     {
+        if ($length < $this->getMinLength()) {
+            throw new InvalidLengthException($length, $this->getMinLength());
+        }
+
         $dictionary       = $this->getDictionary();
         $dictionaryLength = strlen($dictionary) - 1;
         $password         = '';
@@ -46,4 +50,18 @@ abstract class Generator
      * @return bool
      */
     abstract protected function check($password);
+
+    /**
+     * Return min required length for password
+     * @return int
+     */
+    abstract protected function getMinLength();
+
+    static function getName()
+    {
+        $class = get_called_class();
+        $name  = str_replace('\\', '.', $class);
+
+        return strtolower($name);
+    }
 }
