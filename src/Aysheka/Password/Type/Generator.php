@@ -7,8 +7,8 @@ namespace Aysheka\Password\Type;
  */
 abstract class Generator
 {
-    protected $numbers = '1234567890';
-    protected $chars = 'qwertyuiopasdfghjklzxcvbnm';
+    protected $numbers = '23456789';
+    protected $chars = 'qwertyupasdfghjkzxcvbnm';
     protected $specialChars = '!@#$%^&&*()-_+=:;';
 
     /**
